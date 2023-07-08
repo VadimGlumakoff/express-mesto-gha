@@ -17,6 +17,9 @@ const getUserById = async (req, res) => {
         }
         res.send(user);
     } catch (err) {
+        if (err.name === "CastError") {
+            res.status(400).send({ message: "Невалидные данные" });
+        }
         res.status(500).send({ message: "Ошибка на сервере" });
     }
 };
@@ -25,7 +28,7 @@ const createUser = async (req, res) => {
     try {
         const { name, about, avatar } = req.body;
         if (!name || !about || !avatar) {
-            res.status(404).send({ message: "Переданны неверные данные" });
+            res.status(400).send({ message: "Переданны неверные данные" });
             return;
         }
         const user = await User.create({ name, about, avatar });
@@ -34,6 +37,9 @@ const createUser = async (req, res) => {
         }
         res.status(201).send(user);
     } catch (err) {
+        if (err.name === "ValidationError") {
+            res.status(400).send({ message: "Невалидные данные" });
+        }
         res.status(500).send({ message: "Ошибка на сервере" });
     }
 };
@@ -42,7 +48,7 @@ const updateUser = async (req, res) => {
     try {
         const { name, about } = req.body;
         if (!name || !about) {
-            res.status(404).send({ message: "Переданны неверные данные" });
+            res.status(400).send({ message: "Переданны неверные данные" });
             return;
         }
         const user = await User.findByIdAndUpdate(
@@ -55,7 +61,7 @@ const updateUser = async (req, res) => {
             res.status(404).send({ message: "Профиль не обновлен" });
             return;
         }
-        res.status(201).send(user);
+        res.send(user);
     } catch (err) {
         res.status(500).send({ message: "Ошибка на сервере" });
     }
