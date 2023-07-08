@@ -18,6 +18,9 @@ const deleteCardById = async (req, res) => {
         await Card.findByIdAndRemove(req.params.cardId);
         res.send({ message: "Карточка удалена" });
     } catch (err) {
+        if (err.name === "CastError") {
+            res.status(400).send({ message: "Невалидные данные" });
+        }
         res.status(500).send({ message: "Ошибка на сервере" });
     }
 };
@@ -26,7 +29,7 @@ const createCard = async (req, res) => {
     try {
         const { name, link } = req.body;
         if (!name || !link) {
-            res.status(404).send({ message: "Переданны неверные данные" });
+            res.status(400).send({ message: "Переданны неверные данные" });
             return;
         }
         const card = await Card.create({ name, link, owner: req.user._id });
@@ -35,6 +38,9 @@ const createCard = async (req, res) => {
         }
         res.status(201).send(card);
     } catch (err) {
+        if (err.name === "ValidationError") {
+            res.status(400).send({ message: "Невалидные данные" });
+        }
         res.status(500).send({ message: "Ошибка на сервере" });
     }
 };
@@ -51,6 +57,9 @@ const likeCard = async (req, res) => {
         }
         res.send(card);
     } catch (err) {
+        if (err.name === "CastError") {
+            res.status(400).send({ message: "Невалидные данные" });
+        }
         res.status(500).send({ message: "Ошибка на сервере" });
     }
 };
@@ -67,6 +76,9 @@ const dislikeCard = async (req, res) => {
         }
         res.send(card);
     } catch (err) {
+        if (err.name === "CastError") {
+            res.status(400).send({ message: "Невалидные данные" });
+        }
         res.status(500).send({ message: "Ошибка на сервере" });
     }
 };
