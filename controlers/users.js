@@ -69,20 +69,22 @@ const updateUser = async (req, res) => {
 
 const updateAvatar = async (req, res) => {
     try {
-        const userId = req.user._id;
         const { avatar } = req.body;
-
-        if (!userId || !avatar) {
-            res.status(404).send({ message: "Переданны неверные данные" });
+        if (!avatar) {
+            res.status(400).send({ message: "Переданны неверные данные" });
+            return;
         }
         const user = await User.findByIdAndUpdate(
             req.user._id,
             { avatar },
             { new: true, runValidators: true },
         );
+
         if (!user) {
-            res.status(404).send({ message: "Аватар не обновлен" });
+            res.status(404).send({ message: "Профиль не обновлен" });
+            return;
         }
+        res.send(user);
     } catch (err) {
         res.status(500).send({ message: "Ошибка на сервере" });
     }
