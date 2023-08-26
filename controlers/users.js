@@ -21,7 +21,7 @@ const getUser = async (req, res) => {
         const user = await User.findById(req.user._id);
         res.send(user);
     } catch (err) {
-        throw new AuthError("Пользователь не найден");
+        throw new AuthError("Пользователь не найденr");
     }
 };
 
