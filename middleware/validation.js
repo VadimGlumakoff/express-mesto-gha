@@ -1,39 +1,39 @@
-const { celebrate, joi } = require("celebrate", "Joi");
+const { celebrate, Joi } = require("celebrate", "Joi");
 
 const validationLogin = celebrate({
-    body: joi.object().keys({
-        email: joi.string().required().email(),
-        password: joi.string().required(),
+    body: Joi.object().keys({
+        email: Joi.string().required().email(),
+        password: Joi.string().required(),
     }),
 });
 
 const validationCreateUser = celebrate({
-    body: joi.object().keys({
-        name: joi.string().min(2).max(30),
-        about: joi.string().min(2).max(30),
-        avatar: joi.string(),
-        email: joi.string().required().email(),
-        password: joi.string().required(),
+    body: Joi.object().keys({
+        name: Joi.string().min(2).max(30),
+        about: Joi.string().min(2).max(30),
+        avatar: Joi.string(),
+        email: Joi.string().required().email(),
+        password: Joi.string().required(),
     }),
 });
 
 const validationUpdateUser = celebrate({
-    body: joi.object().keys({
-        name: joi.string().min(2).max(30).required(),
-        about: joi.string().min(2).max(30).required(),
+    body: Joi.object().keys({
+        name: Joi.string().min(2).max(30).required(),
+        about: Joi.string().min(2).max(30).required(),
     }),
 });
 
 const validationUpdateAvatar = celebrate({
-    body: joi.object().keys({
-        avatar: joi.string().required(),
+    body: Joi.object().keys({
+        avatar: Joi.string().required(),
     }),
 });
 
 const validationCreateCard = celebrate({
-    body: joi.object().keys({
-        name: joi.string().min(2).max(30).required(),
-        link: joi.string().required(),
+    body: Joi.object().keys({
+        name: Joi.string().min(2).max(30).required(),
+        link: Joi.string().required(),
     }),
 });
 
