@@ -2,6 +2,7 @@ const Card = require("../models/card");
 
 const BadRequestError = require("../middleware/BadRequestError");
 const NotFoundError = require("../middleware/NotFoundError");
+const InternalServerError = require("../middleware/InternalServerError");
 
 const ForbiddenError = require("../middleware/ForbiddenError");
 
@@ -10,7 +11,7 @@ const getCard = async (req, res) => {
         const cards = await Card.find({});
         res.send(cards);
     } catch (err) {
-        res.status(500).send({ message: "Ошибка на сервере" });
+        throw new InternalServerError("Ошибка на сервере");
     }
 };
 
@@ -31,7 +32,7 @@ const deleteCardById = async (req, res) => {
         if (err.name === "CastError") {
             throw new BadRequestError("Невалидные данные");
         }
-        res.status(500).send({ message: "Ошибка на сервере" });
+        throw new InternalServerError("Ошибка на сервере");
     }
 };
 
@@ -50,7 +51,7 @@ const createCard = async (req, res) => {
         if (err.name === "ValidationError") {
             throw new BadRequestError("Невалидные данные");
         }
-        res.status(500).send({ message: "Ошибка на сервере" });
+        throw new InternalServerError("Ошибка на сервере");
     }
 };
 
@@ -69,7 +70,7 @@ const likeCard = async (req, res) => {
         if (err.name === "CastError") {
             throw new BadRequestError("Невалидные данные");
         }
-        res.status(500).send({ message: "Ошибка на сервере" });
+        throw new InternalServerError("Ошибка на сервере");
     }
 };
 
@@ -88,7 +89,7 @@ const dislikeCard = async (req, res) => {
         if (err.name === "CastError") {
             throw new BadRequestError("Невалидные данные");
         }
-        res.status(500).send({ message: "Ошибка на сервере" });
+        throw new InternalServerError("Ошибка на сервере");
     }
 };
 

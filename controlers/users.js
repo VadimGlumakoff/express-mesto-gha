@@ -5,7 +5,7 @@ const ConflictError = require("../middleware/ConflictError");
 const BadRequestError = require("../middleware/BadRequestError");
 const NotFoundError = require("../middleware/NotFoundError");
 const AuthError = require("../middleware/AuthError");
-// const InternalServerError = require("../middleware/InternalServerError");
+const InternalServerError = require("../middleware/InternalServerError");
 
 const getUsers = async (req, res) => {
     try {
@@ -25,7 +25,7 @@ const getUser = async (req, res) => {
     }
 };
 
-const getUserById = async (req, res, next) => {
+const getUserById = async (req, res) => {
     try {
         const user = await User.findById(req.params.userId);
         if (!user) {
@@ -36,11 +36,11 @@ const getUserById = async (req, res, next) => {
         if (err.name === "CastError") {
             throw new BadRequestError("Невалидные данные");
         }
-        next(err);
+        throw new InternalServerError("Ошибка на сервере");
     }
 };
 
-const createUser = async (req, res, next) => {
+const createUser = async (req, res) => {
     try {
         const {
             name, about, avatar, email,
@@ -65,11 +65,11 @@ const createUser = async (req, res, next) => {
         if (err.code === 11000) {
             throw new ConflictError("Пользователь с таким email уже существует");
         }
-        next(err);
+        throw new InternalServerError("Ошибка на сервере");
     }
 };
 
-const updateUser = async (req, res, next) => {
+const updateUser = async (req, res) => {
     try {
         const { name, about } = req.body;
 
@@ -84,11 +84,11 @@ const updateUser = async (req, res, next) => {
         }
         res.send(user);
     } catch (err) {
-        next(err);
+        throw new InternalServerError("Ошибка на сервере");
     }
 };
 
-const updateAvatar = async (req, res, next) => {
+const updateAvatar = async (req, res) => {
     try {
         const { avatar } = req.body;
         if (!avatar) {
@@ -105,11 +105,11 @@ const updateAvatar = async (req, res, next) => {
         }
         res.send(user);
     } catch (err) {
-        next(err);
+        throw new InternalServerError("Ошибка на сервере");
     }
 };
 
-const login = async (req, res, next) => {
+const login = async (req, res) => {
     try {
         const { email, password } = req.body;
         const user = await User.findOne({ email }).select("+password");
@@ -128,7 +128,7 @@ const login = async (req, res, next) => {
 
         res.send(token);
     } catch (err) {
-        next(err);
+        throw new InternalServerError("Ошибка на сервере");
     }
 };
 
