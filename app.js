@@ -4,7 +4,7 @@ const router = require("./routes/index");
 const { createUser, login } = require("./controlers/users");
 const { auth } = require("./middleware/auth");
 const { validationLogin, validationCreateUser } = require("./middleware/validation");
-const { InternalServerError } = require("./middleware/InternalServerError");
+// const { InternalServerError } = require("./middleware/InternalServerError");
 
 const { PORT = 3000 } = process.env;
 const app = express();
@@ -21,6 +21,6 @@ app.post("/signup", validationCreateUser, createUser);
 app.use(auth);
 app.use(router);
 
-app.use(InternalServerError);
+// app.use(InternalServerError);
 
 app.listen(PORT);
