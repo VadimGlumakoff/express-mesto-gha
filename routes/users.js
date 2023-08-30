@@ -4,6 +4,7 @@ const {
 } = require("../controlers/users");
 
 const {
+    validationUserId,
 
     validationUpdateAvatar,
     validationUpdateUser,
@@ -12,7 +13,7 @@ const {
 
 const router = express.Router();
 router.get("/users", getUsers);
-router.get("/users/:userId", getUserById);
+router.get("/users/:userId", validationUserId, getUserById);
 router.get("/users/me", getUser);
 router.patch("/users/me", validationUpdateUser, updateUser);
 router.patch("/users/me/avatar", validationUpdateAvatar, updateAvatar);

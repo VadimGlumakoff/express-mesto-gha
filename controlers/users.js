@@ -1,31 +1,33 @@
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const User = require("../models/user");
-const ConflictError = require("../middleware/ConflictError");
-const BadRequestError = require("../middleware/BadRequestError");
-const NotFoundError = require("../middleware/NotFoundError");
-const AuthError = require("../middleware/AuthError");
-const InternalServerError = require("../middleware/InternalServerError");
+const ConflictError = require("../errors/ConflictError");
+const BadRequestError = require("../errors/BadRequestError");
+const NotFoundError = require("../errors/NotFoundError");
+const AuthError = require("../errors/AuthError");
 
-const getUsers = async (req, res) => {
+const getUsers = async (req, res, next) => {
     try {
         const users = await User.find({});
         res.send(users);
     } catch (err) {
-        throw new AuthError("Пользователь не авторизован");
+        next(err);
     }
 };
 
-const getUser = async (req, res) => {
+const getUser = async (req, res, next) => {
     try {
         const user = await User.findById(req.user._id);
+        if (!user) {
+            throw new NotFoundError("Пользователь не найден");
+        }
         res.send(user);
     } catch (err) {
-        throw new AuthError("Пользователь не найденr");
+        next(err);
     }
 };
 
-const getUserById = async (req, res) => {
+const getUserById = async (req, res, next) => {
     try {
         const user = await User.findById(req.params.userId);
         if (!user) {
@@ -34,13 +36,14 @@ const getUserById = async (req, res) => {
         res.send(user);
     } catch (err) {
         if (err.name === "CastError") {
-            throw new BadRequestError("Невалидные данные");
+            next(new BadRequestError("Невалидные данные"));
+            return;
         }
-        throw new InternalServerError("Ошибка на сервере");
+        next(err);
     }
 };
 
-const createUser = async (req, res) => {
+const createUser = async (req, res, next) => {
     try {
         const {
             name, about, avatar, email,
@@ -59,17 +62,17 @@ const createUser = async (req, res) => {
         res.status(201).send(user);
     } catch (err) {
         if (err.name === "ValidationError") {
-            throw new BadRequestError("Невалидные данные");
+            next(new BadRequestError("Невалидные данные"));
         }
 
         if (err.code === 11000) {
-            throw new ConflictError("Пользователь с таким email уже существует");
+            next(new ConflictError("Пользователь с таким email уже существует"));
         }
-        throw new InternalServerError("Ошибка на сервере");
+        next(err);
     }
 };
 
-const updateUser = async (req, res) => {
+const updateUser = async (req, res, next) => {
     try {
         const { name, about } = req.body;
 
@@ -84,16 +87,14 @@ const updateUser = async (req, res) => {
         }
         res.send(user);
     } catch (err) {
-        throw new InternalServerError("Ошибка на сервере");
+        next(err);
     }
 };
 
-const updateAvatar = async (req, res) => {
+const updateAvatar = async (req, res, next) => {
     try {
         const { avatar } = req.body;
-        if (!avatar) {
-            throw new BadRequestError("Переданны неверные данные");
-        }
+
         const user = await User.findByIdAndUpdate(
             req.user._id,
             { avatar },
@@ -105,11 +106,11 @@ const updateAvatar = async (req, res) => {
         }
         res.send(user);
     } catch (err) {
-        throw new InternalServerError("Ошибка на сервере");
+        next(err);
     }
 };
 
-const login = async (req, res) => {
+const login = async (req, res, next) => {
     try {
         const { email, password } = req.body;
         const user = await User.findOne({ email }).select("+password");
@@ -128,7 +129,7 @@ const login = async (req, res) => {
 
         res.send(token);
     } catch (err) {
-        throw new InternalServerError("Ошибка на сервере");
+        next(err);
     }
 };
 
