@@ -4,7 +4,6 @@ const isEmail = require("validator/lib/isEmail");
 
 const userSchema = new mongoose.Schema({
     name: {
-        required: true,
         type: String,
         minlength: 2,
         maxlength: 30,
@@ -12,7 +11,6 @@ const userSchema = new mongoose.Schema({
     },
     about: {
         type: String,
-        required: true,
         minlength: 2,
         maxlength: 30,
         default: "Исследователь",
@@ -21,7 +19,6 @@ const userSchema = new mongoose.Schema({
     avatar: {
         type: String,
         default: "https://pictures.s3.yandex.net/resources/jacques-cousteau_1604399756.png",
-        required: true,
         validate: {
             validator: (v) => isUrl(v),
             message: "Неправильный url адрес",
