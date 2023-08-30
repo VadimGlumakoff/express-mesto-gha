@@ -59,7 +59,9 @@ const createUser = async (req, res, next) => {
             throw new NotFoundError("Пользователь не создан");
         }
 
-        res.status(201).send(user);
+        res.status(201).send({
+            name: user.name, about: user.about, avatar: user.avatar, email,
+        });
     } catch (err) {
         if (err.name === "ValidationError") {
             next(new BadRequestError("Невалидные данные"));
@@ -127,7 +129,7 @@ const login = async (req, res, next) => {
             { expiresIn: "7d" },
         );
 
-        res.send(token);
+        res.send({ token });
     } catch (err) {
         next(err);
     }
