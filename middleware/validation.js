@@ -56,7 +56,12 @@ const validationCardId = celebrate({
 const validationCreateCard = celebrate({
     body: Joi.object().keys({
         name: Joi.string().min(2).max(30).required(),
-        link: Joi.string().required(),
+        link: Joi.string().required().custom((value, helper) => {
+            if (!validUrl.isWebUri(value)) {
+                return helper.error("Невалидный url");
+            }
+            return value;
+        }),
     }),
 });
 
