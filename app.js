@@ -1,7 +1,7 @@
 const express = require("express");
 const mongoose = require("mongoose");
+const { errors } = require("celebrate");
 const router = require("./routes/index");
-
 const errorHandler = require("./middleware/errorHandler");
 
 const { PORT = 3000 } = process.env;
@@ -15,7 +15,7 @@ mongoose.connect("mongodb://localhost:27017/mestodb", {
 app.use(express.json());
 
 app.use(router);
-
+app.use(errors());
 app.use(errorHandler);
 
 app.listen(PORT);
