@@ -8,7 +8,7 @@ const auth = (req, res, next) => {
     let payload;
 
     try {
-        payload = jwt.verify(token);
+        payload = jwt.verify(token, "some-secret-key");
     } catch (err) {
         res.status(401).send({ message: "Пользователь не авторизован" });
     }
