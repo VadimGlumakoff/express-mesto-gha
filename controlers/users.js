@@ -129,7 +129,13 @@ const login = async (req, res, next) => {
             { expiresIn: "7d" },
         );
 
-        res.send({ token });
+        const cookieOption = {
+            httpOnly: true,
+            maxAge: 24 * 60 * 60 * 1000,
+        };
+
+        res.cookie("jwtToken", token, cookieOption);
+        res.send({ message: "Успешно вошли" });
     } catch (err) {
         next(err);
     }
