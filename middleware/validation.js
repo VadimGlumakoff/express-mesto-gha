@@ -32,7 +32,7 @@ const validationUpdateUser = celebrate({
 
 const validationUpdateAvatar = celebrate({
     body: Joi.object().keys({
-        avatar: Joi.string().custom((value, helper) => {
+        avatar: Joi.string().required().custom((value, helper) => {
             if (!validUrl.isWebUri(value)) {
                 return helper.error("Невалидный url");
             }
@@ -43,13 +43,13 @@ const validationUpdateAvatar = celebrate({
 
 const validationUserId = celebrate({
     params: Joi.object().keys({
-        userId: Joi.string().hex().length(24),
+        userId: Joi.string().required().hex().length(24),
     }),
 });
 
 const validationCardId = celebrate({
     params: Joi.object().keys({
-        cardId: Joi.string().hex().length(24),
+        cardId: Joi.string().required().hex().length(24),
     }),
 });
 

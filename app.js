@@ -4,8 +4,8 @@ const { errors } = require("celebrate");
 const cookieParser = require("cookie-parser");
 const router = require("./routes/index");
 const errorHandler = require("./middleware/errorHandler");
+const { PORT } = require("./config");
 
-const { PORT = 3000 } = process.env;
 const app = express();
 
 mongoose.connect("mongodb://localhost:27017/mestodb", {

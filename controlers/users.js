@@ -55,9 +55,9 @@ const createUser = async (req, res, next) => {
         const user = await User.create({
             name, about, avatar, password: hashPassword, email,
         });
-        if (!user) {
-            throw new NotFoundError("Пользователь не создан");
-        }
+        // if (!user) {
+        //     throw new NotFoundError("Пользователь не создан");
+        // }
 
         res.status(201).send({
             name: user.name, about: user.about, avatar: user.avatar, email,
@@ -65,7 +65,7 @@ const createUser = async (req, res, next) => {
     } catch (err) {
         if (err.name === "ValidationError") {
             next(new BadRequestError("Невалидные данные"));
-        }
+        } else
 
         if (err.code === 11000) {
             next(new ConflictError("Пользователь с таким email уже существует"));

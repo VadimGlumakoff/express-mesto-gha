@@ -25,7 +25,7 @@ const deleteCardById = async (req, res, next) => {
         if (card.owner.toString() !== req.user._id) {
             throw new ForbiddenError("У вас нет прав");
         }
-        await Card.findByIdAndRemove(req.params.cardId);
+        await Card.deleteOne(req.params.cardId);
         res.send({ message: "Карточка удалена" });
     } catch (err) {
         if (err.name === "CastError") {
